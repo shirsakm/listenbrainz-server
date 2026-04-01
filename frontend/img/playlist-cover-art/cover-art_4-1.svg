@@ -1,16 +1,1 @@
-<svg width="77" height="77" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0.568359" y="0.5" width="75.2311" height="75.2311" rx="3.5" fill="#F5F5F5" stroke="#F5F5F5"/>
-<circle cx="11.1897" cy="11.1214" r="8.19364" fill="#BCBCBC"/>
-<circle cx="46.8567" cy="11.1214" r="8.19364" fill="#BCBCBC"/>
-<circle cx="64.2073" cy="11.1214" r="8.19364" fill="#BCBCBC"/>
-<ellipse cx="11.1897" cy="28.9549" rx="8.19364" ry="8.67562" fill="#BCBCBC"/>
-<circle cx="11.1897" cy="46.7884" r="8.19364" fill="#BCBCBC"/>
-<circle cx="11.1897" cy="64.139" r="8.19364" fill="#BCBCBC"/>
-<ellipse cx="64.2073" cy="28.9549" rx="8.19364" ry="8.67562" fill="#BCBCBC"/>
-<circle cx="46.8567" cy="64.139" r="8.19364" fill="#BCBCBC"/>
-<circle cx="64.2073" cy="46.7884" r="8.19364" fill="#BCBCBC"/>
-<circle cx="64.2073" cy="64.139" r="8.19364" fill="#BCBCBC"/>
-<ellipse cx="29.0233" cy="11.1214" rx="8.67562" ry="8.19364" fill="#BCBCBC"/>
-<ellipse cx="29.0233" cy="64.139" rx="8.67562" ry="8.19364" fill="#BCBCBC"/>
-<circle cx="37.6989" cy="36.6667" r="17.3512" fill="#BCBCBC"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="77" fill="none" viewBox="0 0 77 77"><rect width="75.231" height="75.231" x=".568" y=".5" fill="#F5F5F5" stroke="#F5F5F5" rx="3.5"/><circle cx="11.19" cy="11.121" r="8.194" fill="#BCBCBC"/><circle cx="46.857" cy="11.121" r="8.194" fill="#BCBCBC"/><circle cx="64.207" cy="11.121" r="8.194" fill="#BCBCBC"/><ellipse cx="11.19" cy="28.955" fill="#BCBCBC" rx="8.194" ry="8.676"/><circle cx="11.19" cy="46.788" r="8.194" fill="#BCBCBC"/><circle cx="11.19" cy="64.139" r="8.194" fill="#BCBCBC"/><ellipse cx="64.207" cy="28.955" fill="#BCBCBC" rx="8.194" ry="8.676"/><circle cx="46.857" cy="64.139" r="8.194" fill="#BCBCBC"/><circle cx="64.207" cy="46.788" r="8.194" fill="#BCBCBC"/><circle cx="64.207" cy="64.139" r="8.194" fill="#BCBCBC"/><ellipse cx="29.023" cy="11.121" fill="#BCBCBC" rx="8.676" ry="8.194"/><ellipse cx="29.023" cy="64.139" fill="#BCBCBC" rx="8.676" ry="8.194"/><circle cx="37.699" cy="36.667" r="17.351" fill="#BCBCBC"/></svg>
