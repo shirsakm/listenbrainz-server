@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify, current_app
 
 from listenbrainz.db.mbid_manual_mapping import create_mbid_manual_mapping, get_mbid_manual_mapping
 from listenbrainz.db.metadata import get_metadata_for_recording, get_metadata_for_artist, get_metadata_for_release_group
+import listenbrainz.db.event as db_event
 from listenbrainz.db.model.mbid_manual_mapping import MbidManualMapping
 from listenbrainz.labs_api.labs.api.artist_credit_recording_lookup import ArtistCreditRecordingLookupQuery, \
     ArtistCreditRecordingLookupInput
@@ -28,6 +29,21 @@ MAX_LOOKUPS_PER_POST = 50
 
 def parse_incs(incs):
     allowed_incs = ("artist", "tag", "release", "recording", "release_group")
+
+    if not incs:
+        return []
+    if not isinstance(incs, str):
+        raise APIBadRequest("inc must be a string")
+    incs = incs.split()
+    for inc in incs:
+        if inc not in allowed_incs:
+            raise APIBadRequest("invalid inc argument '%s'. Must be one of %s." % (inc, ", ".join(allowed_incs)))
+
+    return incs
+
+
+def parse_event_incs(incs):
+    allowed_incs = ("artist", "tag", "place", "series", "rels", "setlist")
 
     if not incs:
         return []
@@ -586,4 +602,68 @@ def metadata_artist():
         if "release_group" in incs:
             item["release_group"] = row.release_group_data
         results.append(item)
+    return jsonify(results)
+
+
+@metadata_bp.get("/event/")
+@crossdomain
+@ratelimit()
+def metadata_event():
+    """
+    This endpoint takes in a list of event_mbids and returns an array of dicts that contain
+    event metadata suitable for showing in a context that requires as much detail about
+    an event as possible. Using the inc parameter, you can control which portions of metadata
+    to fetch.
+
+    :param event_mbids: A comma separated list of event_mbids
+    :type event_mbids: ``str``
+    :param inc: A space separated list of "artist", "tag", "place", "series", "rels" and/or
+                "setlist" to indicate which portions of metadata you're interested in fetching.
+                We encourage users to only fetch the data they plan to consume.
+    :type inc: ``str``
+    :statuscode 200: you have data!
+    :statuscode 400: invalid event_mbid arguments
+    """
+    incs = parse_event_incs(request.args.get("inc"))
+
+    events = request.args.get("event_mbids", default=None)
+    if events is None:
+        raise APIBadRequest(
+            "event_mbids argument must be present and contain a comma separated list of event_mbids")
+
+    event_mbids = []
+    for mbid in events.split(","):
+        mbid_clean = mbid.strip()
+        if not is_valid_uuid(mbid_clean):
+            raise APIBadRequest(f"event mbid {mbid} is not valid.")
+
+        event_mbids.append(mbid_clean)
+
+    metadata = db_event.get_metadata_for_event(ts_conn, event_mbids)
+
+    artists = {}
+    if "artist" in incs:
+        artists = db_event.get_artists_for_events(ts_conn, [entry.event_id for entry in metadata])
+
+    results = {}
+    for entry in metadata:
+        item = entry.to_api()
+        if "artist" in incs:
+            item["artist"] = artists.get(entry.event_id, [])
+        if "tag" in incs:
+            item["tag"] = entry.event_data.get("tags", [])
+        if "place" in incs:
+            item["place"] = {
+                "place_mbid": item.get("place_mbid"),
+                "place_name": item.get("place_name"),
+                "area_mbid": item.get("area_mbid"),
+                "area_name": entry.event_data.get("area_name"),
+            }
+        if "series" in incs:
+            item["series"] = entry.event_data.get("series", [])
+        if "rels" in incs:
+            item["rels"] = entry.event_data.get("rels", {})
+        if "setlist" in incs:
+            item["setlist"] = entry.event_data.get("setlist")
+        results[str(entry.event_mbid)] = item
     return jsonify(results)
